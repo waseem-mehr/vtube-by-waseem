@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Login</title>
+    <!--BootStrap CSS-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!--End of Bootstrap CSS-->
+    <!--FontAwesome Icons Link-->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!--End of FontAwesome Icons Link-->
+
+    <style>
+a{
+    text-decoration: none!important;
+}
+.lab{
+    color:#ffc107;
+}
+.modal-body>p{
+    color:#FFC107;
+}
+#id_thumbnail{
+    border-style: solid;
+    border-radius: 20px;
+    border-width: 2px;
+    outline:none;
+}
+#id_image{
+    border-style: solid;
+    border-radius: 20px;
+    border-width: 2px;
+    outline:none;
+}
+.form-control:focus {
+    color: #ffc107;
+
+    background-color: transparent;
+    border-color: #ffc107ed;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem #ffc107;
+}
+#id_video{
+    border-style: solid;
+    border-radius: 20px;
+    border-width: 2px;
+    outline:none;
+}
+.form-control{
+    border-radius: 20px;
+    border-width: 6px;
+    background-color: transparent;
+    color: #ffc107;
+    border-color: #FFC107!important;
+}
+.navbar {
+
+    box-shadow: 0px 0px 20px 2px #0000001f;
+}
+    </style>
+</head>
+<body class="bg-dark">
+<!--Start of Navbar-->
+
+<div class="container-fluid" style="margin-top:120px!important;">
+    <div class="row justify-content-center text-center">
+        <div class="col-xs-8 col-sm-8 col-lg-4 col-md-4">
+
+        {% if messages %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                   {% for message in messages %}
+
+                      <i>{{ message }}</i>
+                {% endfor %}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+
+            {% endif %}
+            <div>
+                <img src="{% static 'video_tube/ic.png'  %}" height="80" width="100"/>
+                <form method="post" action="">
+                    {% csrf_token %}
+                    <label class="lab" for="user_name"><i>Enter Your Username</i> </label>
+                    <input type="text" name="user_name" class="form-control">
+                    <label class="lab" for="user_password"><i>Enter Your Password</i></label>
+                    <input type="password" name="user_password" class="form-control">
+                    <button type="submit" name="login" class="btn btn-warning" style="margin-top: 10px;padding-left: 30px;padding-right: 30px;font-weight: 900;border-radius: 10px">Login</button>
+                    <a href="/signup/" style="text-decoration: underline!important;color: #ffc107;"><p class="lab">Sign Up</p></a>
+                    <p style="color:#ffc107;margin-top: 20px">&copy; Copyright by Waseem</p>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!--Bootstrap js/jquery-->
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+<!--End of Bootstrap js/jquery-->
+</body>
+</html>

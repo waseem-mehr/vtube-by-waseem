@@ -1,0 +1,191 @@
+{% extends 'video_tube/main.html' %}
+{% block title %}{{ video.title }}{% endblock title %}
+{% block script %}
+<script>
+  //commment
+    //form
+  function comment(){
+      var mainCmt=document.getElementById('main-comment');
+      mainCmt.style.display='block';
+  }
+  function valueChange(event){
+      console.log(event);
+      event.target.value='';
+  }
+  function hide(event){
+      var cmtId=event.target.id;
+      var comment='comment'+cmtId;
+      var reply='form'+cmtId;
+      var comment=document.getElementById(comment);
+      var reply=document.getElementById(reply);
+      if(comment!='undefined'){
+          reply.style.display='block';
+      }
+
+      console.log(cmtId);
+  }
+  </script>
+{% endblock script %}
+{% block content %}
+
+    <div class="container-fluid" style="margin-top: 10px!important;">
+        <div class="row">
+            <div class="col-md-8 col-lg-8 col-xs-12 col-sm-12">
+             <div class="card border-warning mb-3 bg-dark" style="">
+              <div class="">
+                  <video width="100%" height="400px" controls>
+                  <source src="/{{ video.video.url }}" type="video/mp4">
+                  <source src="/{{ video.video.url }}" type="video/ogg">
+                  Your browser does not support HTML video.
+                </video>
+                 </div>
+                <div style="display: inline-flex">
+                <div style="float: left;margin-top: 20px!important;margin-left: 6px!important;">
+                    <a href="/user/id={{ video.user.user.id }}"><button style="margin-left:6px!important;border-radius: 50%!important;margin-top: 10px!important;" class="btn btn-outline-warning my-2 my-sm-0" type="button"><img src="/{{ video.user.image.url }}" height="30px" width="30px"/></button></a>
+                 </div>
+                 <div style='float:right;' class="card-header bg-dark text-white">
+                     {{ video.title }} <br><span>{{ views }} Views . {{ likes }} Likes . {{ unlikes }} Dislikes . {{ total_comments }} Comments</span>
+                     <br><span>Uploaded by {{ video.user.user.username }}</span>
+
+                         <form  method="post" action="">
+                             {% csrf_token %}
+                         <button class="btn text-white" type="submit" name="like"><i class="fa fa-thumbs-up" style="font-size: 20px"></i> Like </button>
+                          <button class="btn text-white" type="submit" name="unlike"><i class="fa fa-thumbs-down" style="font-size: 20px"></i> Dislike </button>
+                         </form>
+                         <button type="button" class="btn text-white" data-toggle="modal" data-target="#shareVideo"><i class="fa fa-share-alt" style="font-size: 20px"></i> Share </button>
+                         <button type="button" class="btn text-white" onclick="comment()"><i class="fa fa-comment" style="font-size: 20px"></i> Comment </button>
+
+
+
+                 </div>
+                </div>
+            </div>
+             <div>
+
+
+            <div class="card border-dark mb-3 bg-dark" style="">
+                <!--main comment-->
+                <div id="main-comment" style="margin-bottom: 5px!important;display: none">
+                  <div style="display: inline-flex;margin-top:10px!important;margin-left: 10px!important;">
+
+                 <div style='float:right;border-radius: 20px;' class="card-header text-white bg-warning text-dark ">
+
+                     <form class="form-group" action="" method="post">
+                         {% csrf_token %}
+                         <span style="font-weight: 900">{{ request.user.username }}</span> <br>
+                        <input type="text" class="row from-control bg-warning" style="width:260px!important;border-style: solid;border-color: white!important;border-radius: 30px!important;outline:none;border-width: 5px;padding-left: 2px!important;color: dark" placeholder="comment text..." name="comment_text">
+                         <button onclick="valueChange(event)" class="form-control btn btn-light" style="margin-top:5px!important;border-radius:100px!important;" type="submit" name="comment"><i class="fa fa-send"></i></button>
+                     </form>
+                 </div>
+                </div>
+                </div>
+                {% for comment in comments %}
+                <div style="display: inline-flex;margin-top: 10px" >
+                <div style="float: left;margin-top: 25px!important;margin-left: 10px!important;">
+                    <button style="margin-left:6px!important;border-radius: 30px!important;margin-right: -1px;" class="btn btn-outline-warning my-2 my-sm-0" type="submit"><img src="/{{ comment.comment.user.image.url }}" height="20px" width="20px"/> </button>
+                 </div>
+                 <div style='float:right;border-radius: 20px;' class="card-header text-white bg-warning text-dark ">
+                     <span style="font-weight: 900">{{ comment.comment.user.user.username }}</span> <br><span style="font-style: italic">{{ comment.comment.comment_text }}</span>
+                        <br>
+                         <button class="btn" type="button" onclick="hide(event)" id="{{ comment.comment.id }}" style="outline: none!important;" ><i class="fa fa-comment"></i> Reply</button>
+
+                 </div>
+
+                </div>
+                    <!-- sub comment-->
+                    {% if comment.reply %}
+                        {% for reply in comment.reply %}
+                <div id="comment1">
+                       <div style="display: inline-flex;margin-top:10px!important;margin-left: 70px!important;">
+                <div style="float: left;margin-top: 25px!important;margin-left: 10px!important;">
+                    <button style="margin-left:6px!important;border-radius: 30px!important;margin-right: -1px;" class="btn btn-outline-warning my-2 my-sm-0" type="submit"><img src="/{{ reply.user.image.url }}" height="20px" width="20px"/></i></button>
+                 </div>
+                 <div style='float:right;border-radius: 20px;' class="card-header text-white bg-warning text-dark ">
+                     <span style="font-weight: 900">{{ reply.user.user.username }}</span> <br><span style="font-style: italic">{{ reply.comment_text }}</span>
+
+                 </div>
+                </div>
+                      <!--end comment-->
+
+                </div>
+                        {% endfor %}
+                    {% endif %}
+                    <div id="form{{ comment.comment.id }}" style="display: none">
+                  <div style="display: inline-flex;margin-top:10px!important;margin-left: 10px!important;">
+
+                 <div style='float:right;border-radius: 20px;' class="card-header text-white bg-warning text-dark ">
+
+                     <form class="form-group" action="" method="post">
+                         {% csrf_token %}
+                         <span style="font-weight: 900">{{ request.user.username }}</span> <br>
+                         <input type="hidden" name="comment_id" value="{{ comment.comment.id }}">
+                         <input type="text" class="row from-control bg-warning" style="width:260px!important;border-style: solid;border-color: white!important;border-radius: 30px!important;outline:none;border-width: 5px;padding-left: 2px!important;color: dark" placeholder="comment text..." name="comment_reply">
+                         <button onclick="valueChange(event)" class="form-control btn btn-light" style="margin-top:5px!important;border-radius:100px!important;" type="submit" name="reply"><i class="fa fa-send"></i></button>
+                     </form>
+                 </div>
+                </div>
+              </div>
+                {% endfor %}
+
+
+              </div>
+
+            </div>
+
+             </div>
+
+            <div class="col-md-4 col-lg-4 col-xs-12 col-sm-12">
+              {% for video in related_videos %}
+
+                  <div class="card border-warning mb-3 bg-dark" style="">
+                <a href="/video/id={{ video.id }}">
+                <div style="display: inline-flex">
+                <div style="float: left;margin-top: 40px!important;margin-left: 6px!important;">
+                    <button style="margin-left:6px!important;border-radius: 50%!important;margin-top: -16px!important;" class="btn btn-outline-warning my-2 my-sm-0" type="button"><img src="/{{ video.user.image.url }}" height="30px" width="30px"/></button>
+                 </div>
+                 <div style='float:right;' class="card-header text-white">
+                     {{ video.title }}<br>
+                     {{ video.date }}
+
+                 </div>
+                    <div class="" style="float: right;width: 30%">
+                        <img src="/{{ video.thumbnail.url }}" height="100px" width="100%" alt="none"/>
+
+                    </div>
+                </div>
+            </div>
+                {% endfor %}
+
+
+
+
+
+
+            </div>
+
+        </div>
+
+    </div></a>
+    <!--Share Video Model-->
+ <div class="modal fade " id="shareVideo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog " role="document">
+    <div class="modal-content  bg-dark">
+      <div class="modal-header">
+        <h5 class="modal-title text-warning">Share Video</h5>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+          <span class="" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="text-warning">&copy; Copyright VTube 2020   </p>
+          <button class="btn btn-outline-warning" style="border-radius: 30px!important;"><i class="fa fa-facebook"></i></button>
+          <button class="btn btn-outline-warning" style="border-radius: 30px!important;"><i class="fa fa-instagram"></i></button>
+          <button class="btn btn-outline-warning" style="border-radius: 30px!important;"><i class="fa fa-twitter"></i></button>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+<!--End of Share Video Model-->
+{% endblock content %}
