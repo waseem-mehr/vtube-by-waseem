@@ -1,1 +1,1 @@
-web: gunicorn vtube-by-waseem.wsgi
+web: gunicorn vtube-by-waseem.wsgi --log-file -
